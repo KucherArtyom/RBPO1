@@ -1,0 +1,111 @@
+import os
+from zipfile import ZipFile
+import psutil
+from xml.dom import minidom
+
+def filecreate(filename):
+    file = open(filename, "w")
+    file.close()
+def filewrite(filename):
+    print("Введите строку:")
+    string = str(input())
+    file = open(filename, "w")
+    file.write(string)
+    file.close()
+def fileread(filename):
+    file = open(filename, "r")
+    print(file.read())
+    file.close()
+def filename():
+    print("Введите название файла и формат файла: ")
+    filename = str(input())
+    return filename
+print("1. Вывести информацию в консоль о логических дисках, именах, метке тома, размере и типе файловой системы \n"
+      "2. Работа с файлами \n"
+      "3. Работа с форматом JSON \n"
+      "4. Работа с форматорм XML \n"
+      "5. Создание zip архива, добавление туда файла, определение размера архива")
+n = int(input())
+if n == 1:
+    partitions = psutil.disk_partitions()
+    for partition in partitions:
+        print(f"Диск {partition.device}:")
+        print(f"\tТочка монтирования: {partition.mountpoint}")
+        print(f"\tФайловая система: {partition.fstype}")
+        try:
+            partition_usage = psutil.disk_usage(partition.mountpoint)
+        except PermissionError:
+            continue
+        print(f"\tОбщий объем: {partition_usage.total / (1024 * 1024 * 1024):.2f} ГБ")
+        print(f"\tИспользовано: {partition_usage.used / (1024 * 1024 * 1024):.2f} ГБ")
+        print(f"\tСвободно: {partition_usage.free / (1024 * 1024 * 1024):.2f} ГБ")
+        print(f"\tПроцент использования: {partition_usage.percent}%")
+elif n == 2:
+    print("1. Создать файл \n"
+          "2. Записать в файл строку, введённую пользователем \n"
+          "3. Прочитать файл в консоль \n"
+          "4. Удалить файл")
+    m = int(input())
+    if m == 1:
+        filecreate(filename())
+    if m == 2:
+        filewrite(filename())
+    if m == 3:
+        fileread(filename())
+    if m == 4:
+        os.remove(filename())
+elif n == 3:
+    print("1. Создать файл формате JSON в любом редакторе или с использованием данных, введенных пользовователем \n"
+          "2. Создать новый объект. Выполнить сериализацию объекта в формате JSON и записывать в файл \n"
+          "3. Прочитать файл в консоль \n"
+          "4. Удалить файл")
+    m = int(input())
+    if m == 1:
+        print()
+    if m == 2:
+        print()
+    if m == 3:
+        print()
+    if m == 4:
+        print()
+elif n == 4:
+    print("1. Создать файл в формате XML из редактора \n"
+          "2. Записать в файл новые данные из консоли \n"
+          "3. Прочитать файл в консоль \n"
+          "4. Удалить файл")
+    m = int(input())
+    if m == 1:
+        print()
+    if m == 2:
+        print()
+    if m == 3:
+        print("Введите название файла и формат файла: ")
+        filename1 = str(input())
+        mydoc = minidom.parse(filename1)
+        titles = mydoc.getElementsByTagName('title')
+        for elem in titles:
+            print(elem.firstChild.data)
+    if m == 4:
+        print()
+elif n == 5:
+    print("1. Создать архив в формате zip \n"
+          "2. Добавить файл, выбранный пользователем, в архив \n"
+          "3. Разархивировать файл и вывести данныне о нём \n"
+          "4. Удалить файл и архив")
+    m = int(input())
+    if m == 1:
+        myzip = ZipFile(filename(), "w")
+        myzip.close()
+    if m == 2:
+        print("Введите название архива, в который хотите добавить файл: ")
+        ziparchive = str(input())
+        print("Введите название файла, которое хотите добавить в архив: ")
+        filename1 = str(input())
+        with ZipFile(ziparchive, "w") as myzip:
+            myzip.write(filename1)
+    if m == 3:
+        with ZipFile(filename, "a") as myzip:
+            print(myzip.infolist())
+            myzip.extractall()
+    if m == 4:
+        print()
